@@ -1,3 +1,5 @@
 hs-ts
 *.hi
 *.o
+dist-newstyle
+.vscode/phoityne.log
