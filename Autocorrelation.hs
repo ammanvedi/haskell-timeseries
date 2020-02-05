@@ -1,4 +1,7 @@
 
+module Autocorrelation (
+  autoCorrelation
+) where
 
 mean :: (Fractional a) => [a] -> a
 mean xs = summed / fromIntegral (length xs)
@@ -32,8 +35,8 @@ autoCorrelationAtIndex xs index = divTuple summedTuple
 autoCorrelation :: (Fractional a) => [a] -> [a]
 autoCorrelation xs = [autoCorrelationAtIndex xs i | (i, x) <- zip [0..] xs ]
 
-main :: IO ()
-main = do
-  let nums = [0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1 ]
-  let ac = autoCorrelation nums
-  putStrLn (show ac)
+-- main :: IO ()
+-- main = do
+--   let nums = [0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1 ]
+--   let ac = autoCorrelation nums
+--   putStrLn (show ac)
