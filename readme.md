@@ -8,8 +8,13 @@ This repo contains some utils for analysis of time series, its a work in progres
 
 #### Autocorrelation
 
+Autocorrelation provides the cross correlation of a signal with itself, it is useful for identifying seasonality/repeating patterns.
+
 ```haskell
 autoCorrelation :: (Fractional a) => [a] -> [a]
 ```
 
+#### Peak Detection (WIP)
+
+Peak detection is based on [Simple Algorithms for Peak Detection in Time-Series](https://pdfs.semanticscholar.org/1d60/4572ec6ed77bd07fbb4e9fc32ab5271adedb.pdf) by Girish Keshav Palshikar. Pseudo code can be found in the linked paper.
 
