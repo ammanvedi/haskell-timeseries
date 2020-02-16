@@ -16,12 +16,12 @@ calcNumeratorDenominator mean xs i t = (numerator, xim * xim)
 
 getFractionComponentsToSum :: (Fractional b) => b -> [b] -> Int -> Int -> [(b, b)]
 getFractionComponentsToSum _ _ 0 _ = []
-getFractionComponentsToSum mean xs i t = [newItem] ++ getFractionComponentsToSum mean xs (i - 1) t
+getFractionComponentsToSum mean xs i t = newItem : getFractionComponentsToSum mean xs (i - 1) t
   where newItem = calcNumeratorDenominator mean xs i t
 
 
 sumTupleComponents :: (Fractional a) => [(a, a)] -> (a, a)
-sumTupleComponents xs = foldl (\(x1, y1) (x2, y2) -> (x1 + x2, y1 + y2)) (0, 0) xs
+sumTupleComponents = foldl (\(x1, y1) (x2, y2) -> (x1 + x2, y1 + y2)) (0, 0)
 
 divTuple :: (Fractional a) => (a, a) -> a
 divTuple (x, y) = x / y
@@ -34,9 +34,3 @@ autoCorrelationAtIndex xs index = divTuple summedTuple
 
 autoCorrelation :: (Fractional a) => [a] -> [a]
 autoCorrelation xs = [autoCorrelationAtIndex xs i | (i, x) <- zip [0..] xs ]
-
--- main :: IO ()
--- main = do
---   let nums = [0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1 ]
---   let ac = autoCorrelation nums
---   putStrLn (show ac)
