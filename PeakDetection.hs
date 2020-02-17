@@ -21,12 +21,18 @@ peakFunction k i xs = realToFrac (leftMax + rightMax) / 2
     where leftMax = maximum (leftSignedDistances k i xs)
           rightMax = maximum (rightSignedDistances k i xs)
 
+isSmallPeak :: (Fractional a, Floating b) => a -> a -> b -> Int -> Bool
+isSmallPeak x mean sd h = x > 0 && (x - mean) > (h * sd)
 
+filterSmallPeaks :: (Fractional a, Floating b, Real c) => [(Int, a)] -> [c] -> a -> b -> Int -> [a]
+filterSmallPeaks a xs mean sd h = map (\(ix, x) -> xs !! ix) a
+    where largePeaks = filter (\(ix, x) -> isSmallPeak x mean sd h) a
 
 palshPeakDetection :: (Real a) => [a] -> Int -> Int -> [a]
-palshPeakDetection xs k h = xs
+palshPeakDetection xs k h = filterSmallPeaks zippedPeakFunctionValues xs meanOfPeakFunctionValues standardDeviationOfPeakFunctionValues h
     where zippedSequence = zip [0..] xs 
           peakFunctionValues = map (\(ix, x) -> peakFunction k ix xs) zippedSequence
-          positivePeakFunctionValues = filter (\x -> x >= 0) peakFunctionValues
-          meanOfFunctionValues = mean positivePeakFunctionValues
-          standardDeviationOfFunctionValues = standardDeviation positivePeakFunctionValues meanOfFunctionValues
+          zippedPeakFunctionValues = zip [0..] peakFunctionValues
+          positivePeakFunctionValues = filter (>= 0) peakFunctionValues
+          meanOfPeakFunctionValues = mean positivePeakFunctionValues
+          standardDeviationOfPeakFunctionValues = standardDeviation positivePeakFunctionValues meanOfPeakFunctionValues
