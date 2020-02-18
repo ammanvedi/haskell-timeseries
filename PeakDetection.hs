@@ -16,19 +16,19 @@ rightSignedDistances :: (Real a) => Int -> Int -> [a] -> [a]
 rightSignedDistances 0 _ _ = []
 rightSignedDistances k i xs = (xs !! (i + k)) : rightSignedDistances (k - 1) i xs 
 
-peakFunction :: (Real a, Fractional b) => Int -> Int -> [a] -> b
-peakFunction k i xs = realToFrac (leftMax + rightMax) / 2
+peakFunction :: (RealFrac a) => Int -> Int -> [a] -> a
+peakFunction k i xs = (leftMax + rightMax) / 2
     where leftMax = maximum (leftSignedDistances k i xs)
           rightMax = maximum (rightSignedDistances k i xs)
 
-isSmallPeak :: (Fractional a, Floating b) => a -> a -> b -> Int -> Bool
-isSmallPeak x mean sd h = x > 0 && (x - mean) > (h * sd)
+isSmallPeak :: (Ord a, Real a) => a -> a -> a -> Int -> Bool
+isSmallPeak x mean sd h = x > 0 && ( (x - mean)) > (fromIntegral h * sd)
 
-filterSmallPeaks :: (Fractional a, Floating b, Real c) => [(Int, a)] -> [c] -> a -> b -> Int -> [a]
-filterSmallPeaks a xs mean sd h = map (\(ix, x) -> xs !! ix) a
+filterSmallPeaks :: (Real a, Ord a) => [(Int, a)] -> [a] -> a -> a -> Int -> [a]
+filterSmallPeaks a xs mean sd h = map (\(ix, x) -> (xs !! ix)) a
     where largePeaks = filter (\(ix, x) -> isSmallPeak x mean sd h) a
 
-palshPeakDetection :: (Real a) => [a] -> Int -> Int -> [a]
+palshPeakDetection :: (RealFrac a, Floating a) => [a] -> Int -> Int -> [a]
 palshPeakDetection xs k h = filterSmallPeaks zippedPeakFunctionValues xs meanOfPeakFunctionValues standardDeviationOfPeakFunctionValues h
     where zippedSequence = zip [0..] xs 
           peakFunctionValues = map (\(ix, x) -> peakFunction k ix xs) zippedSequence
