@@ -3,3 +3,4 @@ hs-ts
 *.o
 dist-newstyle
 .vscode/phoityne.log
+.stack-work

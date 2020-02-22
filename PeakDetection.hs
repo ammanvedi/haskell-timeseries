@@ -21,12 +21,12 @@ peakFunction k i xs = (leftMax + rightMax) / 2
     where leftMax = maximum (leftSignedDistances k i xs)
           rightMax = maximum (rightSignedDistances k i xs)
 
-isSmallPeak :: (Ord a, Real a) => a -> a -> a -> Int -> Bool
-isSmallPeak x mean sd h = x > 0 && ( (x - mean)) > (fromIntegral h * sd)
+isLargePeak :: (Ord a, Real a) => a -> a -> a -> Int -> Bool
+isLargePeak x mean sd h = x > 0 && (x - mean) > (fromIntegral h * sd)
 
 filterSmallPeaks :: (Real a, Ord a) => [(Int, a)] -> [a] -> a -> a -> Int -> [a]
-filterSmallPeaks a xs mean sd h = map (\(ix, x) -> (xs !! ix)) a
-    where largePeaks = filter (\(ix, x) -> isSmallPeak x mean sd h) a
+filterSmallPeaks a xs mean sd h = map (\(ix, x) -> (xs !! ix)) largePeaks
+    where largePeaks = filter (\(ix, x) -> isLargePeak x mean sd h) a
 
 palshPeakDetection :: (RealFrac a, Floating a) => [a] -> Int -> Int -> [a]
 palshPeakDetection xs k h = filterSmallPeaks zippedPeakFunctionValues xs meanOfPeakFunctionValues standardDeviationOfPeakFunctionValues h
