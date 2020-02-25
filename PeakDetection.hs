@@ -3,23 +3,33 @@ module PeakDetection (
     rightSignedDistances,
     peakFunction,
     palshPeakDetection,
+    signValues
 ) where
 
 import Util
 
 
 leftSignedDistances :: (Real a) => Int -> Int -> [a] -> [a]
-leftSignedDistances 0 _ _ = []
-leftSignedDistances k i xs = (xs !! (i - k)) : leftSignedDistances (k - 1) i xs 
+leftSignedDistances k i xs
+    | k == 0 = []
+    | (i - k) >= length xs = leftSignedDistances (k - 1) i xs 
+    | (i - k) < 0 = leftSignedDistances (k - 1) i xs 
+    | otherwise = (xs !! (i - k)) : leftSignedDistances (k - 1) i xs 
 
 rightSignedDistances :: (Real a) => Int -> Int -> [a] -> [a]
-rightSignedDistances 0 _ _ = []
-rightSignedDistances k i xs = (xs !! (i + k)) : rightSignedDistances (k - 1) i xs 
+rightSignedDistances k i xs
+    | k == 0 = []
+    | (i + k) >= length xs = rightSignedDistances (k - 1) i xs 
+    | (i + k) < 0 = rightSignedDistances (k - 1) i xs 
+    | otherwise = (xs !! (i + k)) : rightSignedDistances (k - 1) i xs 
+
+signValues :: (Real a) => [a] -> a -> [a]
+signValues xs xi = map (\x ->  xi - x) xs
 
 peakFunction :: (RealFrac a) => Int -> Int -> [a] -> a
 peakFunction k i xs = (leftMax + rightMax) / 2
-    where leftMax = maximum (leftSignedDistances k i xs)
-          rightMax = maximum (rightSignedDistances k i xs)
+    where leftMax = maximum (signValues (leftSignedDistances k i xs) (xs !! i))
+          rightMax = maximum (signValues (rightSignedDistances k i xs) (xs !! i))
 
 isLargePeak :: (Ord a, Real a) => a -> a -> a -> Int -> Bool
 isLargePeak x mean sd h = x > 0 && (x - mean) > (fromIntegral h * sd)
