@@ -12,7 +12,6 @@ import Util
 leftSignedDistances :: (Real a) => Int -> Int -> [a] -> [a]
 leftSignedDistances k i xs
     | k == 0 = []
-    | (i - k) >= length xs = leftSignedDistances (k - 1) i xs 
     | (i - k) < 0 = leftSignedDistances (k - 1) i xs 
     | otherwise = (xs !! (i - k)) : leftSignedDistances (k - 1) i xs 
 
@@ -20,7 +19,6 @@ rightSignedDistances :: (Real a) => Int -> Int -> [a] -> [a]
 rightSignedDistances k i xs
     | k == 0 = []
     | (i + k) >= length xs = rightSignedDistances (k - 1) i xs 
-    | (i + k) < 0 = rightSignedDistances (k - 1) i xs 
     | otherwise = (xs !! (i + k)) : rightSignedDistances (k - 1) i xs 
 
 signValues :: (Real a) => [a] -> a -> [a]
