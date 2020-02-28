@@ -25,18 +25,20 @@ signValues :: (Real a) => [a] -> a -> [a]
 signValues xs xi = map (\x ->  xi - x) xs
 
 peakFunction :: (RealFrac a) => Int -> Int -> [a] -> a
-peakFunction k i xs = (leftMax + rightMax) / 2
+peakFunction k i xs
+    | k < i && i < (length xs - k) = (leftMax + rightMax) / 2
+    | otherwise = 0
     where leftMax = maximum (signValues (leftSignedDistances k i xs) (xs !! i))
           rightMax = maximum (signValues (rightSignedDistances k i xs) (xs !! i))
 
 isLargePeak :: (Ord a, Real a) => a -> a -> a -> Int -> Bool
 isLargePeak x mean sd h = x > 0 && (x - mean) > (fromIntegral h * sd)
 
-filterSmallPeaks :: (Real a, Ord a) => [(Int, a)] -> [a] -> a -> a -> Int -> [a]
-filterSmallPeaks a xs mean sd h = map (\(ix, x) -> (xs !! ix)) largePeaks
+filterSmallPeaks :: (Real a, Ord a) => [(Int, a)] -> [a] -> a -> a -> Int -> [Int]
+filterSmallPeaks a xs mean sd h = map (\(ix, x) -> ix) largePeaks
     where largePeaks = filter (\(ix, x) -> isLargePeak x mean sd h) a
 
-palshPeakDetection :: (RealFrac a, Floating a) => [a] -> Int -> Int -> [a]
+palshPeakDetection :: (RealFrac a, Floating a) => [a] -> Int -> Int -> [Int]
 palshPeakDetection xs k h = filterSmallPeaks zippedPeakFunctionValues xs meanOfPeakFunctionValues standardDeviationOfPeakFunctionValues h
     where zippedSequence = zip [0..] xs 
           peakFunctionValues = map (\(ix, x) -> peakFunction k ix xs) zippedSequence
