@@ -3,7 +3,9 @@ module PeakDetection (
     rightSignedDistances,
     peakFunction,
     palshPeakDetection,
-    signValues
+    signValues,
+    peakDistances,
+    averagePeakDistance
 ) where
 
 import Util
@@ -46,3 +48,13 @@ palshPeakDetection xs k h = filterSmallPeaks zippedPeakFunctionValues xs meanOfP
           positivePeakFunctionValues = filter (>= 0) peakFunctionValues
           meanOfPeakFunctionValues = mean positivePeakFunctionValues
           standardDeviationOfPeakFunctionValues = standardDeviation positivePeakFunctionValues meanOfPeakFunctionValues
+        
+peakDistances :: (Num a) => [a] -> [a]
+peakDistances (x:xs)
+    | length xs == 0 = []
+    | otherwise = abs (x - (head xs)) : peakDistances xs
+
+averagePeakDistance :: (Fractional b) => [Int] -> b 
+averagePeakDistance xs = mean fracDistances
+    where distances = peakDistances xs
+          fracDistances = map (\x -> fromIntegral x) distances
