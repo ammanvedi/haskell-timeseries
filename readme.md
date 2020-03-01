@@ -14,7 +14,14 @@ Autocorrelation provides the cross correlation of a signal with itself, it is us
 autoCorrelation :: (Fractional a) => [a] -> [a]
 ```
 
-#### Peak Detection (WIP)
+#### Peak Detection
 
 Peak detection is based on [Simple Algorithms for Peak Detection in Time-Series](https://pdfs.semanticscholar.org/1d60/4572ec6ed77bd07fbb4e9fc32ab5271adedb.pdf) by Girish Keshav Palshikar. Pseudo code can be found in the linked paper.
 
+```haskell
+-- Gives the indexes in input array of peaks
+palshPeakDetection :: (RealFrac a, Floating a) => [a] -> Int -> Int -> [Int]
+
+-- Gives the average distance between said indexes
+averagePeakDistance :: (Fractional b) => [Int] -> b 
+```
